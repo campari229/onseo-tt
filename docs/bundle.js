@@ -57799,6 +57799,7 @@ exports["default"] = Port;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const pixi_js_1 = __webpack_require__(95894);
+const vars_1 = __webpack_require__(95486);
 class Queue extends pixi_js_1.Container {
     constructor(props) {
         super();
@@ -57815,11 +57816,9 @@ class Queue extends pixi_js_1.Container {
     }
     setShipInLine(shipToAdd) {
         this.ShipsLine = [...this.ShipsLine, shipToAdd];
-        // this.freePlaceCoords.x += 100;
     }
     removeShipFromLine(shipToRemove) {
         this.ShipsLine = this.ShipsLine.filter((ship) => ship.shipNumber !== shipToRemove.shipNumber);
-        // this.freePlaceCoords.x = -100;
     }
     checkLine() {
         setInterval(() => {
@@ -57848,7 +57847,7 @@ class Queue extends pixi_js_1.Container {
     lineMove() {
         this.ShipsLine.forEach((ship, i) => {
             ship.moveInLine({
-                x: 380 + i * 100,
+                x: 380 + i * (vars_1.variables.shipLength + 10),
                 y: this.freePlaceCoords.y,
             });
         });
@@ -57909,10 +57908,10 @@ class Ship extends pixi_js_1.Container {
         //view params
         this.container = new pixi_js_1.Graphics();
         this.container
-            .rect(0, 0, 90, 30)
+            .rect(0, 0, vars_1.variables.shipLength, vars_1.variables.shipWidth)
             .stroke({ width: 3, color: this.type === "in" ? "red" : "lightgreen" });
         this.filling = new pixi_js_1.Graphics();
-        this.filling.rect(0, 0, this.filled ? 90 : 0.0001, 30);
+        this.filling.rect(0, 0, this.filled ? vars_1.variables.shipLength : 0.0001, vars_1.variables.shipWidth);
         this.filling.fill({ color: this.type === "in" ? "red" : "lightgreen" });
         this.addChild(this.filling);
         this.addChild(this.container);
@@ -57953,16 +57952,14 @@ class Ship extends pixi_js_1.Container {
     goToLine(line) {
         const isLoadingLine = line.type === "loading";
         const placeToGo = {
-            x: line.freePlaceCoords.x + (line.ShipsLine.length * 100),
+            x: line.freePlaceCoords.x + line.ShipsLine.length * 100,
             y: line.freePlaceCoords.y,
         };
         line.setShipInLine(this);
         const moveTween = new TWEEN.Tween({ x: this.x, y: this.y })
             .to({
-            x: this.x + 30,
-            y: isLoadingLine
-                ? placeToGo.y + 40
-                : placeToGo.y - 40,
+            x: this.x + vars_1.variables.shipWidth,
+            y: isLoadingLine ? placeToGo.y + 40 : placeToGo.y - 40,
         })
             .onUpdate((coords) => {
             this.position.set(coords.x, coords.y);
@@ -58087,7 +58084,7 @@ class Ship extends pixi_js_1.Container {
         const moveTween = new TWEEN.Tween({ x: this.x, y: this.y });
         moveTween
             .to({
-            x: this.port.EntranceCoordinates.x - 100,
+            x: this.port.EntranceCoordinates.x - (vars_1.variables.shipLength + 10),
             y: this.port.EntranceCoordinates.y + 20,
         }, 2000)
             .onUpdate((coords) => {
@@ -58177,6 +58174,7 @@ var _Game_pixiApp;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const Ship_1 = __importDefault(__webpack_require__(55850));
 const Port_1 = __importDefault(__webpack_require__(35859));
+const vars_1 = __webpack_require__(95486);
 class Game {
     constructor(pixiApp) {
         _Game_pixiApp.set(this, void 0);
@@ -58194,7 +58192,7 @@ class Game {
                 number: this.shipNumber,
             });
             __classPrivateFieldGet(this, _Game_pixiApp, "f").stage.addChild(ship);
-        }, 8000);
+        }, vars_1.variables.shipSpawnTime);
     }
     update() { }
 }
@@ -58213,6 +58211,9 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.variables = void 0;
 exports.variables = {
     loadUnloadTime: 5000,
+    shipLength: 90,
+    shipWidth: 30,
+    shipSpawnTime: 8000,
 };
 
 

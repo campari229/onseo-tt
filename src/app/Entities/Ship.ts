@@ -44,11 +44,16 @@ export default class Ship extends Container {
     //view params
     this.container = new Graphics();
     this.container
-      .rect(0, 0, 90, 30)
+      .rect(0, 0, variables.shipLength, variables.shipWidth)
       .stroke({ width: 3, color: this.type === "in" ? "red" : "lightgreen" });
 
     this.filling = new Graphics();
-    this.filling.rect(0, 0, this.filled ? 90 : 0.0001, 30);
+    this.filling.rect(
+      0,
+      0,
+      this.filled ? variables.shipLength : 0.0001,
+      variables.shipWidth
+    );
     this.filling.fill({ color: this.type === "in" ? "red" : "lightgreen" });
 
     this.addChild(this.filling);
@@ -97,17 +102,15 @@ export default class Ship extends Container {
     const isLoadingLine = line.type === "loading";
 
     const placeToGo: Coordinates = {
-        x: line.freePlaceCoords.x + (line.ShipsLine.length * 100),
-        y: line.freePlaceCoords.y,
-    }
+      x: line.freePlaceCoords.x + line.ShipsLine.length * 100,
+      y: line.freePlaceCoords.y,
+    };
 
     line.setShipInLine(this);
     const moveTween = new TWEEN.Tween({ x: this.x, y: this.y })
       .to({
-        x: this.x + 30,
-        y: isLoadingLine
-          ? placeToGo.y + 40
-          : placeToGo.y - 40,
+        x: this.x + variables.shipWidth,
+        y: isLoadingLine ? placeToGo.y + 40 : placeToGo.y - 40,
       })
       .onUpdate((coords) => {
         this.position.set(coords.x, coords.y);
@@ -253,7 +256,7 @@ export default class Ship extends Container {
     moveTween
       .to(
         {
-          x: this.port.EntranceCoordinates.x - 100,
+          x: this.port.EntranceCoordinates.x - (variables.shipLength + 10),
           y: this.port.EntranceCoordinates.y + 20,
         },
         2000
@@ -320,7 +323,7 @@ export default class Ship extends Container {
       .onUpdate((coords) => {
         this.position.set(coords.x, coords.y);
       })
-      .start()
+      .start();
 
     this.app.ticker.add(() => {
       moveTween.update();

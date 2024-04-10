@@ -2,6 +2,7 @@ import { Container } from "pixi.js";
 import Ship from "./Ship";
 import { Coordinates } from "../helpers/types";
 import Port from "./Port";
+import { variables } from "../helpers/vars";
 
 type QueueProps = {
   type: "loading" | "unloading";
@@ -33,16 +34,12 @@ export default class Queue extends Container {
 
   public setShipInLine(shipToAdd: Ship) {
     this.ShipsLine = [...this.ShipsLine, shipToAdd];
-
-    // this.freePlaceCoords.x += 100;
   }
 
   public removeShipFromLine(shipToRemove: Ship) {
     this.ShipsLine = this.ShipsLine.filter(
       (ship) => ship.shipNumber !== shipToRemove.shipNumber
     );
-
-    // this.freePlaceCoords.x = -100;
   }
 
   checkLine() {
@@ -72,7 +69,7 @@ export default class Queue extends Container {
   lineMove() {
     this.ShipsLine.forEach((ship, i) => {
       ship.moveInLine({
-        x: 380 + i * 100,
+        x: 380 + i * (variables.shipLength + 10),
         y: this.freePlaceCoords.y,
       });
     });

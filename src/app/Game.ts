@@ -1,6 +1,7 @@
 import { Application, Renderer } from "pixi.js";
 import Ship from "./Entities/Ship";
 import Port from "./Entities/Port";
+import { variables } from "./helpers/vars";
 
 export default class Game {
   #pixiApp: Application<Renderer>;
@@ -26,7 +27,7 @@ export default class Game {
       });
 
       this.#pixiApp.stage.addChild(ship);
-    }, 8000);
+    }, variables.shipSpawnTime);
   }
 
   update() {}

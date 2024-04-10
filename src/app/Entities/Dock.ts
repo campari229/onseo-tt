@@ -13,7 +13,6 @@ type DockProps = {
 
 export default class Dock extends Container {
   private app: Application<Renderer>;
-  //   private port: Port;
   private container: Graphics;
   private filling: Graphics;
   public number: number;
